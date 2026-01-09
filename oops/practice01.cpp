@@ -1,40 +1,28 @@
 #include<iostream>
-#include<string>
 using namespace std;
 
-class user{
-    private:
-            int id;
-            string password;
+class parent{
+    public :
+            parent(){
+                cout<<"parent class constructor called "<<endl; 
 
-    public:
-            string username;
-            
-            user(int id){
-                this->id=id;
+          }
+            ~parent(){
+                cout<<"parent class destructor called "<<endl; 
             }
-
-        //getter
-        string getpassword(){
-            return password;
-        }
-
-        //setter
-        void setpassword(string password){
-            this->password=password;
-
-        }
-
-
+};
+class child : public parent{
+    public :
+            child(){
+                cout<<"child class constructor called "<<endl;
+            }
+            ~child(){
+                cout<<"child class destructor called "<<endl;
+            }
 };
 
 int main(){
-    user u1(101);
-    u1.username="ab";
-    u1.setpassword("ab@p");
-
-    cout<<"user name is : "<<u1.username<<endl;
-    cout<<"user password is : "<<u1.getpassword()<<endl;
+    child c;
     
 
     return 0;

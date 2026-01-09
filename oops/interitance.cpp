@@ -69,6 +69,25 @@ public:
     }
 };
 
+// 4. hierarchical inheritance
+class A{
+    public :
+    void funcA(){
+        cout<<"funcA is called !!!"<<endl;
+    }
+};
+class B:public A{
+    public :
+    void funcB(){
+        cout<<"funcB is called !!!"<<endl;
+    }
+};
+class C:public A{
+    public :
+    void funcC(){
+        cout<<"funcC is called !!!"<<endl;
+    }
+};
 
 
 int main() {
@@ -89,6 +108,16 @@ int main() {
     c.teamwork();
     c.coding();
     c.performance();
+
+    cout<<"\n------ HIERARCHICAL INHERITANCE ------"<<endl;
+    B b;
+    b.funcA();  
+    b.funcB();
+    C c1;
+    c1.funcA();
+    c1.funcC();
+
+
 
     return 0;
 }
