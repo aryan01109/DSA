@@ -13,7 +13,7 @@ int search(const vector<int>& arr, int start, int end, int num) {
     if (arr[mid] == num)
         return mid;
 
-    // Left sorted
+    // Left jted
     if (arr[start] <= arr[mid]) {
         if (arr[start] <= num && num < arr[mid])
             return search(arr, start, mid - 1, num);
