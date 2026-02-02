@@ -10,6 +10,11 @@ public:
         data = val;
         next = NULL;
     }
+
+    // Delete only THIS node 
+    ~Node(){
+        cout << "~node " << data << endl;
+    }
 };
 
 class List {
@@ -22,10 +27,18 @@ public:
         tail = NULL;
     }
 
+    // Delete entire list safely
+    ~List(){
+        cout << "~list\n";
+        while(head != NULL){
+            pop_front();
+        }
+    }
+
+    // Add at front
     void push_front(int val){
         Node* newNode = new Node(val);
 
-        // empty list
         if(head == NULL){
             head = tail = newNode;
         }
@@ -35,36 +48,53 @@ public:
         }
     }
 
+    // Add at back
     void push_back(int val){
         Node* newNode = new Node(val);
 
-        // empty list
         if(head == NULL){
             head = tail = newNode;
         }
         else{
             tail->next = newNode;
             tail = newNode;
-        }    
+        }
     }
 
+    // Add at middle / position
     void push_mid(int val ,int pos){
-        Node* newNode = new Node(val);
 
-
-        Node* temp=head;
-        for(int i=0;i<pos-1;i++){
-            if(head == NULL){
-            cout<<"position is invalid!!\n";
+        if(pos == 0){
+            push_front(val);
             return;
-            }
-            temp=temp->next;
         }
 
-        newNode->next=temp->next;
-        temp->next=newNode;  
-    }    
+        Node* newNode = new Node(val);
+        Node* temp = head;
 
+        for(int i = 0; i < pos-1; i++){
+            if(temp == NULL){
+                cout << "Position is invalid!!\n";
+                delete newNode;
+                return;
+            }
+            temp = temp->next;
+        }
+
+        if(temp == NULL){
+            cout << "Position is invalid!!\n";
+            delete newNode;
+            return;
+        }
+
+        newNode->next = temp->next;
+        temp->next = newNode;
+
+        if(newNode->next == NULL)
+            tail = newNode;
+    }
+
+    // Print list
     void print(){
         Node* temp = head;
         while(temp != NULL){
@@ -72,6 +102,61 @@ public:
             temp = temp->next;
         }
         cout << "NULL\n";
+    }
+
+    // Delete from front
+    void pop_front(){
+        if(head == NULL){
+            cout << "list is empty!!\n";
+            return;
+        }
+
+        Node* temp = head;
+        head = head->next;
+
+        delete temp;
+
+        if(head == NULL)
+            tail = NULL;
+    }
+
+    // Delete from back
+    void pop_back(){
+        if(head == NULL){
+            cout << "list is empty!!\n";
+            return;
+        }
+
+        // Only one node
+        if(head == tail){
+            delete head;
+            head = tail = NULL;
+            return;
+        }
+
+        Node* temp = head;
+
+        while(temp->next != tail){
+            temp = temp->next;
+        }
+
+        delete tail;
+        tail = temp;
+        tail->next = NULL;
+    }
+
+    void search_key(int key){
+
+        Node* temp = head;
+        int i=0;
+        while(temp->next != NULL){
+            if(key==temp->data){
+                cout<<temp->data<<" found at : "<<i<<endl;
+
+            }
+            temp=temp->next;
+            i++;
+        }
     }
 };
 
@@ -88,6 +173,14 @@ int main(){
     li.push_mid(8,2);
 
     li.print();
+
+    li.pop_front();
+    li.print();
+
+    li.pop_back();
+    li.print();
+
+    li.search_key(8);
 
     return 0;
 }
