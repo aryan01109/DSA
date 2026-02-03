@@ -11,7 +11,6 @@ public:
         next = NULL;
     }
 
-    // Delete only THIS node 
     ~Node(){
         cout << "~node " << data << endl;
     }
@@ -27,7 +26,6 @@ public:
         tail = NULL;
     }
 
-    // Delete entire list safely
     ~List(){
         cout << "~list\n";
         while(head != NULL){
@@ -35,33 +33,30 @@ public:
         }
     }
 
-    // Add at front
+    // ---------- INSERT ----------
+
     void push_front(int val){
         Node* newNode = new Node(val);
 
         if(head == NULL){
             head = tail = newNode;
-        }
-        else{
+        } else {
             newNode->next = head;
             head = newNode;
         }
     }
 
-    // Add at back
     void push_back(int val){
         Node* newNode = new Node(val);
 
         if(head == NULL){
             head = tail = newNode;
-        }
-        else{
+        } else {
             tail->next = newNode;
             tail = newNode;
         }
     }
 
-    // Add at middle / position
     void push_mid(int val ,int pos){
 
         if(pos == 0){
@@ -94,7 +89,8 @@ public:
             tail = newNode;
     }
 
-    // Print list
+    // ---------- PRINT ----------
+
     void print(){
         Node* temp = head;
         while(temp != NULL){
@@ -104,7 +100,8 @@ public:
         cout << "NULL\n";
     }
 
-    // Delete from front
+    // ---------- DELETE ----------
+
     void pop_front(){
         if(head == NULL){
             cout << "list is empty!!\n";
@@ -113,21 +110,18 @@ public:
 
         Node* temp = head;
         head = head->next;
-
         delete temp;
 
         if(head == NULL)
             tail = NULL;
     }
 
-    // Delete from back
     void pop_back(){
         if(head == NULL){
             cout << "list is empty!!\n";
             return;
         }
 
-        // Only one node
         if(head == tail){
             delete head;
             head = tail = NULL;
@@ -145,33 +139,136 @@ public:
         tail->next = NULL;
     }
 
+    // ---------- SEARCH ----------
+
     void search_key(int key){
 
         Node* temp = head;
-        int i=0;
-        while(temp->next != NULL){
-            if(key==temp->data){
-                cout<<temp->data<<" found at : "<<i<<endl;
+        int i = 0;
 
+        while(temp != NULL){
+            if(key == temp->data){
+                cout << key << " found at position: " << i << endl;
+                return;
             }
-            temp=temp->next;
+            temp = temp->next;
             i++;
         }
+
+        cout << key << " not found\n";
+    }
+
+    int helper(Node* hp, int key){
+
+        if(hp == NULL)
+            return -1;
+
+        if(hp->data == key)
+            return 0;
+
+        int ind = helper(hp->next, key);
+
+        if(ind == -1)
+            return -1;
+
+        return ind + 1;
+    }
+
+    int search_recur(int key){
+        return helper(head, key);
+    }
+
+    // ---------- REVERSE LIST ----------
+
+    void reverse(){
+
+        Node* prev = NULL;
+        Node* curr = head;
+        Node* next = NULL;
+
+        tail = head;
+
+        while(curr != NULL){
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        head = prev;
+    }
+
+    // ---------- SIZE ----------
+
+    int size(){
+        int count = 0;
+        Node* temp = head;
+
+        while(temp != NULL){
+            count++;
+            temp = temp->next;
+        }
+
+        return count;
+    }
+
+    // ---------- REMOVE Nth NODE (0-based) ----------
+
+    void removeNth(int n){
+
+        if(head == NULL){
+            cout << "List is empty\n";
+            return;
+        }
+
+        if(n == 0){
+            pop_front();
+            return;
+        }
+
+        int sz = size();
+
+        if(n >= sz || n < 0){
+            cout << "Invalid position\n";
+            return;
+        }
+
+        Node* prev = head;
+
+        for(int i = 0; i < n-1; i++){
+            prev = prev->next;
+        }
+
+        Node* del = prev->next;
+
+        prev->next = del->next;
+
+        if(del == tail)
+            tail = prev;
+
+        delete del;
     }
 };
 
+// ---------- MAIN ----------
+
 int main(){
 
-    List li;   
+    List li;
 
     li.push_front(3);
     li.push_front(2);
     li.push_front(5);
 
     li.push_back(6);
-
     li.push_mid(8,2);
 
+    li.print();
+
+    li.reverse();
+    li.print();
+
+    li.removeNth(2);
     li.print();
 
     li.pop_front();
@@ -179,6 +276,9 @@ int main(){
 
     li.pop_back();
     li.print();
+
+    cout << "Recursive search index: " 
+         << li.search_recur(8) << endl;
 
     li.search_key(8);
 
