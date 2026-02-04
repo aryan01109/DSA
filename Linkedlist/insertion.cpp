@@ -212,7 +212,7 @@ public:
         return count;
     }
 
-    // ---------- REMOVE Nth NODE (0-based) ----------
+    // ---------- REMOVE Nth NODE ----------
 
     void removeNth(int n){
 
@@ -248,6 +248,70 @@ public:
 
         delete del;
     }
+
+    // ---------- MERGE SORT HELPERS ----------
+
+    Node* SpliteAtMid(Node* head){
+
+        if(head == NULL || head->next == NULL)
+            return NULL;
+
+        Node* slow = head;
+        Node* fast = head->next;
+
+        while(fast && fast->next){
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        Node* rightHead = slow->next;
+        slow->next = NULL;
+
+        return rightHead;
+    }
+
+    Node* merge(Node* left, Node* right){
+
+        if(!left) return right;
+        if(!right) return left;
+
+        Node* result = NULL;
+
+        if(left->data <= right->data){
+            result = left;
+            result->next = merge(left->next, right);
+        }
+        else{
+            result = right;
+            result->next = merge(left, right->next);
+        }
+
+        return result;
+    }
+
+    Node* Merge_sort(Node* head){
+
+        if(head == NULL || head->next == NULL)
+            return head;
+
+        Node* rightHead = SpliteAtMid(head);
+
+        Node* left = Merge_sort(head);
+        Node* right = Merge_sort(rightHead);
+
+        return merge(left, right);
+    }
+
+    void sort(){
+
+        head = Merge_sort(head);
+
+        Node* temp = head;
+        while(temp && temp->next)
+            temp = temp->next;
+
+        tail = temp;
+    }
 };
 
 // ---------- MAIN ----------
@@ -277,10 +341,15 @@ int main(){
     li.pop_back();
     li.print();
 
-    cout << "Recursive search index: " 
+    cout << "Recursive search index: "
          << li.search_recur(8) << endl;
 
     li.search_key(8);
+
+    // ---- SORT ----
+    li.sort();
+    cout << "After sorting:\n";
+    li.print();
 
     return 0;
 }
