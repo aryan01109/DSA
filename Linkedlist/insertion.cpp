@@ -251,7 +251,7 @@ public:
 
     // ---------- MERGE SORT HELPERS ----------
 
-    Node* SpliteAtMid(Node* head){
+    Node* SplitAtMid(Node* head){
 
         if(head == NULL || head->next == NULL)
             return NULL;
@@ -294,7 +294,7 @@ public:
         if(head == NULL || head->next == NULL)
             return head;
 
-        Node* rightHead = SpliteAtMid(head);
+        Node* rightHead = SplitAtMid(head);
 
         Node* left = Merge_sort(head);
         Node* right = Merge_sort(rightHead);
@@ -312,7 +312,55 @@ public:
 
         tail = temp;
     }
+
+    // ---------- HELPER REVERSE ----------
+    Node* reverseLL(Node* head){
+        Node* prev=NULL;
+        Node* curr=head;
+        Node* next=NULL;
+
+        while(curr !=NULL){
+            next=curr->next;
+            curr->next=prev;
+
+            prev=curr;
+            curr=next;
+        }
+        return prev;
+    }
+
+    // ---------- ZIG ZAG ----------
+    void zigzagLL(){
+
+        if(!head || !head->next) return;
+
+        Node* righthead = SplitAtMid(head);
+        Node* rightheadRev = reverseLL(righthead);
+
+        Node* left = head;
+        Node* right = rightheadRev;
+
+        while(left && right){
+            Node* nextleft = left->next;
+            Node* nextright = right->next;
+
+            left->next = right;
+
+            if(nextleft == NULL) break;
+
+            right->next = nextleft;
+
+            left = nextleft;
+            right = nextright;
+        }
+
+        // update tail
+        Node* temp = head;
+        while(temp->next) temp = temp->next;
+        tail = temp;
+    }
 };
+
 
 // ---------- MAIN ----------
 
@@ -329,7 +377,12 @@ int main(){
 
     li.print();
 
+    li.zigzagLL();
+    cout << "After zigzag:\n";
+    li.print();
+
     li.reverse();
+    cout << "After reverse:\n";
     li.print();
 
     li.removeNth(2);
@@ -346,7 +399,6 @@ int main(){
 
     li.search_key(8);
 
-    // ---- SORT ----
     li.sort();
     cout << "After sorting:\n";
     li.print();
